@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Install Terraform') {
       steps {
-        sh './tf-install.sh'
+        sh 'chmod 755 ./tf-install.sh && ./tf-install.sh'
       }
     }
     stage('Init Provider') {
