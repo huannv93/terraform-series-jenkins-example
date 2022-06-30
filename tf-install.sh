@@ -1,9 +1,17 @@
 #!/bin/bash 
 
-apt-get update && apt-get install -y gnupg software-properties-common curl
+wget -N -c https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh
 
-curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+# Make installer executable
+chmod 755 install.sh
 
-apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+# Install tfswitch in a location you have permission
+./install.sh -b $(pwd)/.bin
 
-apt-get update && apt-get install terraform
+# set custom bin path
+CUSTOMBIN=$(pwd)/.bin
+
+#Add custom bin path to PATH environment
+export PATH=$CUSTOMBIN:$PATH
+
+$CUSTOMBIN/tfswitch -b $CUSTOMBIN/terraform
