@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   tools {
-    terraform 'terraform'
+    terraform 'Terraform configuration' #Terraform configuration : la ten config trong jenkins
   }
 
   environment {
