@@ -1,3 +1,58 @@
+pipeline {
+  agent any
+
+  tools {
+    terraform 'Terraform configuration'
+  }
+
+  environment {
+    AWS_ACCESS_KEY_ID     = credentials('aws-secret-key-id-tutaojenkins')
+    AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key-tutaojenkins')
+  }
+
+
+  stages {
+    stage('Init Provider') {
+      steps {
+        sh 'terraform init'
+      }
+    }
+    stage('Plan Resources') {
+      steps {
+        sh 'terraform plan'
+      }
+    }
+
+    stage('Apply Resources') {
+        when {
+            expression { 
+                return ApplyResources.toBoolean()
+            }
+        }
+      // set ApplyResources.toBoolean trong config jenkins : Boolean Parameter
+
+      steps {
+        sh 'terraform apply -auto-approve'
+        
+      }
+    }
+    stage('Destroy Resources') {
+        when {
+            expression { 
+                return DestroyResources.toBoolean()
+            }
+        }        
+      steps {
+        sh 'terraform destroy -auto-approve'
+      }
+    }    
+  }
+}
+
+
+
+
+
 // pipeline {
 //   agent any
 //   parameters {
@@ -57,36 +112,36 @@
 //   }
 // }
 
-pipeline {
-  agent any
-  parameters {
-        choice(
-            choices: ['Apply Resources' , 'Destroy Resources'],
-            description: '',
-            name: 'REQUESTED_ACTION')
-    }
+// pipeline {
+//   agent any
+//   parameters {
+//         choice(
+//             choices: ['Apply Resources' , 'Destroy Resources'],
+//             description: '',
+//             name: 'REQUESTED_ACTION')
+//     }
 
-  tools {
-    terraform 'Terraform configuration'
-  }
+//   tools {
+//     terraform 'Terraform configuration'
+//   }
 
-  environment {
-    AWS_ACCESS_KEY_ID     = credentials('aws-secret-key-id-tutaojenkins')
-    AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key-tutaojenkins')
-  }
+//   environment {
+//     AWS_ACCESS_KEY_ID     = credentials('aws-secret-key-id-tutaojenkins')
+//     AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key-tutaojenkins')
+//   }
 
 
-  stages {
-    stage('Init Provider') {
-      steps {
-        sh 'terraform init'
-      }
-    }
-    stage('Plan Resources') {
-      steps {
-        sh 'terraform plan'
-      }
-    }
+//   stages {
+//     stage('Init Provider') {
+//       steps {
+//         sh 'terraform init'
+//       }
+//     }
+//     stage('Plan Resources') {
+//       steps {
+//         sh 'terraform plan'
+//       }
+//     }
 //     stage('Confirm update') {
 //         steps {
 //             input message: 'Confirm build RELEASE?'
@@ -97,26 +152,26 @@ pipeline {
 //         }
 //     }
 
-    stage('Apply Resources') {
-        when {
-            expression { 
-                return ApplyResources.toBoolean()
-            }
-        }
-      steps {
-        sh 'terraform apply -auto-approve'
+//     stage('Apply Resources') {
+//         when {
+//             expression { 
+//                 return ApplyResources.toBoolean()
+//             }
+//         }
+//       steps {
+//         sh 'terraform apply -auto-approve'
         
-      }
-    }
-    stage('Destroy Resources') {
-        when {
-            expression { 
-                return DestroyResources.toBoolean()
-            }
-        }        
-      steps {
-        sh 'terraform destroy -auto-approve'
-      }
-    }    
-  }
-}
+//       }
+//     }
+//     stage('Destroy Resources') {
+//         when {
+//             expression { 
+//                 return DestroyResources.toBoolean()
+//             }
+//         }        
+//       steps {
+//         sh 'terraform destroy -auto-approve'
+//       }
+//     }    
+//   }
+// }
