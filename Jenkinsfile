@@ -1,7 +1,7 @@
 pipeline {
   agent any
   parameters {
-        booleans(
+        choice(
             choices: ['Apply Resources' , 'Destroy Resources'],
             description: '',
             name: 'REQUESTED_ACTION')
