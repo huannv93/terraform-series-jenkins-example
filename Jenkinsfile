@@ -22,6 +22,16 @@ pipeline {
         sh 'terraform plan'
       }
     }
+    stage('Confirm update') {
+        steps {
+            input message: 'Confirm build RELEASE?'
+        }
+        post {
+            success { echo 'approved' }
+            unsuccessful { echo 'Build not approved' }
+        }
+    }
+
     stage('Apply Resources') {
       input {
         message "Do you want to proceed for production deployment?"
