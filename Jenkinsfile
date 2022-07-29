@@ -1,5 +1,11 @@
 pipeline {
   agent any
+  parameters {
+        choice(
+            choices: ['Apply Resources' , 'Destroy Resources'],
+            description: '',
+            name: 'REQUESTED_ACTION')
+    }
 
   tools {
     terraform 'Terraform configuration'
