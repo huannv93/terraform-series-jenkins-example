@@ -4,6 +4,7 @@ pipeline {
   tools {
     terraform 'Terraform configuration'
   }
+// Terraform configuration : the name is set on jenkin with terraform tools.
 
   environment {
     AWS_ACCESS_KEY_ID     = credentials('aws-secret-key-id-tutaojenkins')
