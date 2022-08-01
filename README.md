@@ -2,3 +2,6 @@
 
 
 https://viblo.asia/p/terraform-series-bai-14-automating-terraform-with-jenkins-3Q75wNgQlWb
+
+
+![img.png](img.png)
