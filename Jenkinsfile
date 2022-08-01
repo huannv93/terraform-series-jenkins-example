@@ -1,3 +1,4 @@
+// example about Parallel stages Jenkins
 pipeline {
   agent any
 
@@ -23,55 +24,26 @@ pipeline {
       }
     }
 
-    stage('Run Tests') {
+    stage('Appy or Destroy Infratruction') {
         parallel {
-            stage('Test On Windows') {
-                agent {
-                    label "windows"
-                }
+            stage('Apply Resources') {
+              input {
+                message "Do you want to proceed for production deployment?"
+              }
                 steps {
-                    bat "run-tests.bat"
+                    sh 'terraform apply -auto-approve'
                 }
-                post {
-                    always {
-                        junit "**/TEST-*.xml"
-                    }
-                }
+
             }
-            stage('Test On Linux') {
-                agent {
-                    label "linux"
-                }
+            stage('Destroy Resources') {
+              input {
+                message "Do you want to destroy for production deployment?"
+              }
                 steps {
-                    sh "run-tests.sh"
+                    sh 'terraform destroy -auto-approve'
                 }
-                post {
-                    always {
-                        junit "**/TEST-*.xml"
-                    }
-                }
-            }
-    stage('Apply Resources') {
-        when {
-            expression {
-                return ApplyResources.toBoolean()
             }
         }
-      // set ApplyResources.toBoolean trong config jenkins : Boolean Parameter
-
-      steps {
-        sh 'terraform apply -auto-approve'
-
-      }
-    }
-    stage('Destroy Resources') {
-        when {
-            expression {
-                return DestroyResources.toBoolean()
-            }
-        }
-      steps {
-        sh 'terraform destroy -auto-approve'
-      }
-    }
+     }
+  }
   }
